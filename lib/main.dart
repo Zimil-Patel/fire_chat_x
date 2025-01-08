@@ -4,6 +4,7 @@ import 'package:fire_chat_x/theme/themes.dart';
 import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/auth/auth_screen.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
+import 'package:fire_chat_x/view/profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,6 @@ AuthController authController = Get.put(AuthController());
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
-  authController.getSignInStatusFromStorage();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -42,6 +42,7 @@ class FireChatX extends StatelessWidget {
         getPages: [
           GetPage(name: '/auth', page: () => const AuthScreen()),
           GetPage(name: '/home', page: () => const HomeScreen()),
+          GetPage(name: '/profile', page: () => const ProfileScreen()),
         ],
         debugShowCheckedModeBanner: false,
         theme: ThemeClass.lightTheme,

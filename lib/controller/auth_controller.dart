@@ -57,6 +57,7 @@ class AuthController extends GetxController {
   @override
   Future<void> onInit() async {
     // TODO: implement onInit
+    getSignInStatusFromStorage();
     await getCountryCodeList();
     super.onInit();
   }
