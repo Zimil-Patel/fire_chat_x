@@ -20,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: false,
         title: Text(
           'Profile',
-          style: Theme.of(context).textTheme.displayMedium!.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 fontSize: height * 0.026,
                 fontWeight: FontWeight.w500,
               ),
@@ -46,6 +46,8 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: defPadding,),
+
             // USER PROFILE
             Text(
               'Star Boy',
@@ -57,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
             // USER PROFILE
             Text(
               'jash24@gmail.com',
-              style: Theme.of(context).textTheme.displayMedium!.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.w500,
                   fontSize: height * 0.016,
               ),
