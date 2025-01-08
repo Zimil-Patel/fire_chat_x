@@ -1,12 +1,13 @@
 import 'dart:developer';
 
+import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
   AuthServices._instance();
-
   static final AuthServices authServices = AuthServices._instance();
+  static User? user;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -16,7 +17,7 @@ class AuthServices {
     try {
       UserCredential credential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
-      log("Successfully created... ${credential.user}");
+      log("Successfully created... ${credential.user!.email}");
       return true;
     } catch (e) {
       log("Failed to create user!!! : $e");
@@ -30,7 +31,9 @@ class AuthServices {
     try {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
-      log("Successfully singed in... ${userCredential.user}");
+      user = userCredential.user;
+      log("Successfully singed in... ${userCredential.user!.email}");
+      FireStoreServices.fireStoreServices.addUser();
       return true;
     } catch (e) {
       log("Sign in failed !!! : $e");
@@ -44,6 +47,7 @@ class AuthServices {
       if (getCurrentUser() != null) {
         await _firebaseAuth.signOut();
         await GoogleSignIn().signOut();
+        user = null;
         log("Signed out...");
       } else {
         log("Current user is null");
@@ -79,7 +83,9 @@ class AuthServices {
       try {
         await _firebaseAuth.signInWithCredential(credential);
         if (getCurrentUser() != null) {
+          user = getCurrentUser();
           log("Logged in as ${getCurrentUser()!.email!}");
+          FireStoreServices.fireStoreServices.addUser();
           return true;
         }
       } catch (e) {

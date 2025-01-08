@@ -1,4 +1,5 @@
 import 'package:fire_chat_x/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,12 +11,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+    User? user = AuthServices.user;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
           'Fire Chats',
-          style: Theme.of(context).textTheme.displayMedium!.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 fontSize: height * 0.026,
                 fontWeight: FontWeight.w500,
               ),
@@ -30,26 +35,15 @@ class HomeScreen extends StatelessWidget {
               Get.toNamed('/profile');
             },
             child: CircleAvatar(
-              backgroundColor: Colors.grey,
-              child: Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
+                backgroundColor: Colors.grey,
+                backgroundImage: user!.photoURL != null ? NetworkImage(user.photoURL!) : null,
+                child: user.photoURL == null ? const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ) : const SizedBox()
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await AuthServices.authServices.singOutUser();
-              if (AuthServices.authServices.getCurrentUser() == null) {
-                await authController.setSignInStatusInStorage(false);
-                Get.offAndToNamed('/auth');
-              }
-            },
-            icon: const Icon(Icons.logout_rounded),
-          ),
-        ],
       ),
     );
   }

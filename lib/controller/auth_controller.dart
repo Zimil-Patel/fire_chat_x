@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:fire_chat_x/services/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -27,6 +28,9 @@ class AuthController extends GetxController {
     final bool result = storage.read('isSignedIn') ?? false;
     isSignedIn.value = result;
     log("Got SignInStatus: $isSignedIn");
+    if(result){
+      AuthServices.user = AuthServices.authServices.getCurrentUser();
+    }
   }
 
 
