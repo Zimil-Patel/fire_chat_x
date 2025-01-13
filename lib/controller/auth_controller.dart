@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/auth_services.dart';
+import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';

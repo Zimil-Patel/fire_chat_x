@@ -12,10 +12,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'controller/auth_controller.dart';
+import 'controller/home_controller.dart';
 import 'firebase_options.dart';
 
 ThemeController themeController = Get.put(ThemeController());
 AuthController authController = Get.put(AuthController());
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

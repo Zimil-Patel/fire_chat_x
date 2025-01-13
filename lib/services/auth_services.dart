@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -18,6 +19,10 @@ class AuthServices {
       UserCredential credential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       log("Successfully created... ${credential.user!.email}");
+      UserModel details = UserModel(
+        email: credential.user!.email,
+      );
+      FireStoreServices.fireStoreServices.addUser(details);
       return true;
     } catch (e) {
       log("Failed to create user!!! : $e");
@@ -33,7 +38,6 @@ class AuthServices {
           .signInWithEmailAndPassword(email: email, password: password);
       user = userCredential.user;
       log("Successfully singed in... ${userCredential.user!.email}");
-      FireStoreServices.fireStoreServices.addUser();
       return true;
     } catch (e) {
       log("Sign in failed !!! : $e");
@@ -85,7 +89,13 @@ class AuthServices {
         if (getCurrentUser() != null) {
           user = getCurrentUser();
           log("Logged in as ${getCurrentUser()!.email!}");
-          FireStoreServices.fireStoreServices.addUser();
+          UserModel details = UserModel(
+            email: user!.email,
+            displayName: user!.displayName,
+            phoneNumber: user!.phoneNumber,
+            photoURL: user!.photoURL,
+          );
+          FireStoreServices.fireStoreServices.addUser(details);
           return true;
         }
       } catch (e) {
@@ -95,8 +105,7 @@ class AuthServices {
     } catch(e) {
       log("Error: $e");
     }
-
-
     return false;
   }
+
 }

@@ -1,5 +1,7 @@
+import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/auth_services.dart';
 import 'package:fire_chat_x/utils/constants.dart';
+import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    User? user = AuthServices.user;
+    UserModel user = homeController.currentUser!;
 
     return Scaffold(
       appBar: AppBar(
