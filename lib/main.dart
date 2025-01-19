@@ -3,6 +3,7 @@ import 'package:fire_chat_x/theme/theme_controller.dart';
 import 'package:fire_chat_x/theme/themes.dart';
 import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/auth/auth_screen.dart';
+import 'package:fire_chat_x/view/chats/chats_screen.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:fire_chat_x/view/profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'controller/auth_controller.dart';
-import 'controller/home_controller.dart';
 import 'firebase_options.dart';
 
 ThemeController themeController = Get.put(ThemeController());
@@ -45,6 +45,7 @@ class FireChatX extends StatelessWidget {
           GetPage(name: '/auth', page: () => const AuthScreen()),
           GetPage(name: '/home', page: () => const HomeScreen()),
           GetPage(name: '/profile', page: () => const ProfileScreen()),
+          GetPage(name: '/chats', page: () => const ChatsScreen()),
         ],
         debugShowCheckedModeBanner: false,
         theme: ThemeClass.lightTheme,
