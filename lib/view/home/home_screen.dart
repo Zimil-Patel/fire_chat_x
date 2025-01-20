@@ -59,7 +59,6 @@ class HomeScreen extends StatelessWidget {
                         ? ListTile(
                             onTap: () {
                               chatController.setReceiver(user);
-
                               Get.toNamed('/chats');
                             },
                             leading: CircleAvatar(

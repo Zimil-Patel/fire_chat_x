@@ -80,7 +80,7 @@ class FireStoreServices {
 
 
     try {
-      await reference.set({
+      await reference.collection('messages').add({
         "sender": chat.sender,
         "receiver": chat.receiver,
         "message": chat.message,
@@ -93,11 +93,17 @@ class FireStoreServices {
 
 
   // GET CHATS
-  Stream getChats(String sender, receiver){
+  Stream<List<ChatModel>> getChats(String sender, String receiver) {
     DocumentReference reference = getDocReference(sender, receiver);
 
-    Stream chatStream = reference.snapshots();
-
-    return chatStream;
+    // Return a stream of ChatModel lists
+    return reference
+        .collection('messages')
+        .orderBy('time', descending: false)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs.map((snapshot) {
+      return ChatModel.fromFirebase(snapshot.data());
+    }).toList());
   }
+
 }

@@ -12,6 +12,7 @@ class MsgField extends StatelessWidget {
       child: TextField(
         controller: chatController.msgCtrl,
         style: const TextStyle(fontSize: 16),
+        focusNode: chatController.focusNode,
         onTapOutside: (event) {
           FocusManager.instance.primaryFocus!.unfocus();
         },

@@ -1,8 +1,11 @@
 import 'package:fire_chat_x/controller/chat_controller.dart';
+import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:fire_chat_x/utils/constants.dart';
+import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'components/chat_list_view.dart';
 import 'components/msg_field.dart';
 import 'components/send_button.dart';
 
@@ -26,38 +29,56 @@ class ChatsScreen extends StatelessWidget {
         title: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const CircleAvatar(
-              radius: 24,
+            // PROFILE PHOTO
+            CircleAvatar(
+              backgroundColor: Colors.grey,
+              backgroundImage: chatController.receiver!.photoURL != null
+                  ? NetworkImage(chatController.receiver!.photoURL!)
+                  : null,
+              child: chatController.receiver!.photoURL == null
+                  ? const Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    )
+                  : const SizedBox(),
             ),
+
+            // NAME
             Text(
-              'Zimil Patel',
+              chatController.receiver!.displayName ?? "No name",
               style:
                   Theme.of(context).textTheme.bodyMedium!.copyWith(height: 2),
             )
           ],
         ),
       ),
-      body:  Column(
+      body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: defPadding / 2, vertical: defPadding / 4),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: defPadding / 2),
-                      padding: const EdgeInsets.symmetric(vertical: defPadding / 2, horizontal: defPadding),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.blueAccent
-                      ),
-                      child: const Text('Message'),
-                    ),
-                  ),
-                ],
+            child: StreamBuilder(
+              stream: FireStoreServices.fireStoreServices.getChats(
+                homeController.currentUser!.email!,
+                chatController.receiver!.email!,
               ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(snapshot.error.toString()),
+                  );
+                }
+
+                if (snapshot.hasData) {
+                  return ChatListView(
+                    chatList: snapshot.data!,
+                  );
+                }
+
+                return const SizedBox();
+              },
             ),
           ),
 
