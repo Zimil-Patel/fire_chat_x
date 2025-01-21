@@ -32,3 +32,32 @@ class SendButton extends StatelessWidget {
     );
   }
 }
+
+class SaveButton extends StatelessWidget {
+  const SaveButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(defPadding),
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.blueAccent,
+        ),
+        child: const Icon(
+          Icons.done,
+          size: 20,
+          color: Colors.white,
+        ),
+      ),
+      onPressed: () async {
+        await chatController.updateMessage(homeController.currentUser!.email!);
+      },
+    );
+  }
+}

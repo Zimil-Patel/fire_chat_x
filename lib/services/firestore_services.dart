@@ -78,7 +78,6 @@ class FireStoreServices {
   Future<void> sendChat(ChatModel chat) async {
     DocumentReference reference = getDocReference(chat.sender, chat.receiver);
 
-
     try {
       await reference.collection('messages').add({
         "sender": chat.sender,
@@ -91,7 +90,6 @@ class FireStoreServices {
     }
   }
 
-
   // GET CHATS
   Stream<List<ChatModel>> getChats(String sender, String receiver) {
     DocumentReference reference = getDocReference(sender, receiver);
@@ -102,8 +100,39 @@ class FireStoreServices {
         .orderBy('time', descending: false)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs.map((snapshot) {
-      return ChatModel.fromFirebase(snapshot.data());
-    }).toList());
+              return ChatModel.fromFirebase(snapshot.data(), snapshot.id);
+            }).toList());
   }
 
+  // DELETE CHAT
+  Future<void> deleteChat(String id, String sender, String receiver) async {
+    DocumentReference reference = getDocReference(sender, receiver);
+
+    // DELETE CHAT
+    try {
+      await reference.collection("messages").doc(id).delete();
+      log("Chat deleted successfully");
+    } catch (e) {
+      log("Chat delete failed");
+    }
+  }
+
+  // UPDATE CHAT
+  Future<void> updateChat(
+      {required String message,
+      required sender,
+      required receiver,
+      required id}) async {
+    DocumentReference reference = getDocReference(sender, receiver);
+    // DELETE CHAT
+    try {
+      await reference
+          .collection("messages")
+          .doc(id)
+          .update({"message": message});
+      log("Chat updated successfully");
+    } catch (e) {
+      log("Chat update failed");
+    }
+  }
 }

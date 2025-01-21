@@ -11,8 +11,10 @@ class ChatController extends GetxController {
   UserModel? receiver;
   TextEditingController msgCtrl = TextEditingController();
   FocusNode focusNode = FocusNode();
+  RxBool showSaveButton = false.obs;
+  String selectedMsgId = "";
 
-  setReceiver(UserModel receiver){
+  setReceiver(UserModel receiver) {
     this.receiver = receiver;
   }
 
@@ -35,11 +37,22 @@ class ChatController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    // Dispose of controllers and focus node
-    msgCtrl.dispose();
-    focusNode.dispose();
-    super.onClose();
+  Future<void> updateMessage(String sender) async {
+    final message = msgCtrl.text.trim();
+    if (message.isNotEmpty) {
+      await FireStoreServices.fireStoreServices.updateChat(
+        message: message, sender: sender, receiver: receiver!.email, id: selectedMsgId,);
+      msgCtrl.clear();
+    } else {
+      showSaveButton.value = false;
+    }
+    }
+
+    @override
+    void onClose() {
+      // Dispose of controllers and focus node
+      msgCtrl.dispose();
+      focusNode.dispose();
+      super.onClose();
+    }
   }
-}

@@ -19,7 +19,7 @@ class ChatsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        toolbarHeight: 80,
+        toolbarHeight: 95,
         backgroundColor: Colors.transparent,
         bottom: const PreferredSize(
             preferredSize: Size.fromHeight(10),
@@ -43,12 +43,26 @@ class ChatsScreen extends StatelessWidget {
                   : const SizedBox(),
             ),
 
+            const SizedBox(height: 4,),
+
             // NAME
             Text(
               chatController.receiver!.displayName ?? "No name",
               style:
-                  Theme.of(context).textTheme.bodyMedium!.copyWith(height: 2),
-            )
+                  Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+            ),
+
+            // ONLINE STATUS
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Online",
+                  style:
+                  Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.green),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -83,20 +97,20 @@ class ChatsScreen extends StatelessWidget {
           ),
 
           // MESSAGE TEXT FIELD
-          const SafeArea(
+           SafeArea(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: defPadding),
+              padding: const EdgeInsets.symmetric(horizontal: defPadding),
               child: Row(
                 children: [
                   // TEXT FIELD
-                  MsgField(),
+                  const MsgField(),
 
-                  SizedBox(
+                  const SizedBox(
                     width: defPadding,
                   ),
 
                   // SEND BUTTON
-                  SendButton(),
+                  Obx(() => chatController.showSaveButton.value ? const SaveButton() : const SendButton()),
                 ],
               ),
             ),
