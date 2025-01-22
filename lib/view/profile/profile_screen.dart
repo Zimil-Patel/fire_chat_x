@@ -2,7 +2,6 @@ import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/auth_services.dart';
 import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top * 2.5,
+            minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
           ),
           child: IntrinsicHeight(
             child: Column(
@@ -52,7 +51,7 @@ class ProfileScreen extends StatelessWidget {
                   child: CircleAvatar(
                     radius: height * 0.05,
                     backgroundColor: Colors.grey,
-                    backgroundImage: user!.photoURL != null ? NetworkImage(user.photoURL!) : null,
+                    backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
                     child: user.photoURL == null ? Icon(
                       Icons.person,
                       color: Colors.white,
@@ -84,29 +83,32 @@ class ProfileScreen extends StatelessWidget {
 
                 const Spacer(),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: defPadding * 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
 
-                    Text(
-                      'Log out',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        fontSize: height * 0.020,
+                      Text(
+                        'Log out',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: height * 0.020,
+                        ),
                       ),
-                    ),
 
-                    IconButton(
-                      onPressed: () async {
-                        await AuthServices.authServices.singOutUser();
-                        if (AuthServices.authServices.getCurrentUser() == null) {
-                          await authController.setSignInStatusInStorage(false);
-                          Get.offAndToNamed('/auth');
-                        }
-                      },
-                      icon: const Icon(Icons.logout_rounded),
-                    ),
-                  ],
+                      IconButton(
+                        onPressed: () async {
+                          await AuthServices.authServices.singOutUser();
+                          if (AuthServices.authServices.getCurrentUser() == null) {
+                            await authController.setSignInStatusInStorage(false);
+                            Get.offAndToNamed('/auth');
+                          }
+                        },
+                        icon: const Icon(Icons.logout_rounded),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

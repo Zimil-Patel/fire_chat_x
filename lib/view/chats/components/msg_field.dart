@@ -13,8 +13,13 @@ class MsgField extends StatelessWidget {
         controller: chatController.msgCtrl,
         style: const TextStyle(fontSize: 16),
         focusNode: chatController.focusNode,
+        onTap: (){
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            chatController.scrollToEnd();
+          });
+        },
         onTapOutside: (event) {
-          FocusManager.instance.primaryFocus!.unfocus();
+          // FocusManager.instance.primaryFocus!.unfocus();
         },
         decoration: InputDecoration(
           hintText: 'Message',

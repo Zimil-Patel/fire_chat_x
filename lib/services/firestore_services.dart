@@ -74,6 +74,9 @@ class FireStoreServices {
     return chatReference;
   }
 
+
+  // SET ONLINE OFFLINE STATUS
+
   // SEND MESSAGE / ADD MESSAGE TO FIREBASE
   Future<void> sendChat(ChatModel chat) async {
     DocumentReference reference = getDocReference(chat.sender, chat.receiver);

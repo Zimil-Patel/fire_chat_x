@@ -7,6 +7,7 @@ class ThemeClass {
     hintColor: Colors.blueAccent,
     scaffoldBackgroundColor: Colors.white,
     cardColor: Colors.white,
+
     textTheme: TextTheme(
       displayLarge: GoogleFonts.varelaRound(
         textStyle:
@@ -54,7 +55,7 @@ class ThemeClass {
     primaryColor: Colors.blueGrey,
     hintColor: Colors.blueGrey,
     scaffoldBackgroundColor: Colors.black,
-    cardColor: Colors.grey[800],
+    cardColor: const Color(0xff333333),
     textTheme: TextTheme(
       displayLarge: GoogleFonts.varelaRound(
         textStyle:

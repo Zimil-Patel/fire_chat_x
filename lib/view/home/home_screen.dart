@@ -17,17 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          'Fire Chats',
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                fontSize: height * 0.026,
-                fontWeight: FontWeight.w500,
-              ),
-        ),
-        leading: profileCircleButton(),
-      ),
+      appBar: _buildHomeAppBar(context),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -88,6 +78,20 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar _buildHomeAppBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      title: Text(
+        'Fire Chats',
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+              fontSize: height * 0.026,
+              fontWeight: FontWeight.w500,
+            ),
+      ),
+      leading: profileCircleButton(),
     );
   }
 }
