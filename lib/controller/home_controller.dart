@@ -18,6 +18,7 @@ class HomeController extends GetxController{
   @override
   Future<void> onInit() async {
     log("called init");
+    await setCurrentUser();
     await FireStoreServices.fireStoreServices.getFireStoreUsersList();
     super.onInit();
   }

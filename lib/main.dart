@@ -1,4 +1,3 @@
-
 import 'package:fire_chat_x/theme/theme_controller.dart';
 import 'package:fire_chat_x/theme/themes.dart';
 import 'package:fire_chat_x/utils/constants.dart';
@@ -18,17 +17,14 @@ import 'firebase_options.dart';
 ThemeController themeController = Get.put(ThemeController());
 AuthController authController = Get.put(AuthController());
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await GetStorage.init();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(
-    const FireChatX(),
-  );
+  runApp(const FireChatX());
 }
 
 class FireChatX extends StatelessWidget {

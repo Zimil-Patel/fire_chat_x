@@ -34,19 +34,33 @@ profileCircleButton() {
             );
 
           } else if(snapshot.connectionState == ConnectionState.waiting){
-            return const CircleAvatar(
-              backgroundColor: Colors.grey,
-                child: Icon(
-              Icons.person,
-              color: Colors.white,
-            ));
-          } else {
-            return const CircleAvatar(
+            return Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: const CircleAvatar(
                 backgroundColor: Colors.grey,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ));
+                  child: Icon(
+                Icons.person,
+                color: Colors.white,
+              )),
+            );
+          } else {
+            return Container(
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                  )),
+            );
           }
         }),
   );
