@@ -47,7 +47,7 @@ class ThemeClass {
       brightness: Brightness.light,
       primarySwatch: Colors.blue,
     ).copyWith(
-      background: Colors.white,
+      surface: Colors.white,
     ),
   );
 
@@ -94,7 +94,7 @@ class ThemeClass {
     colorScheme: ColorScheme.fromSwatch(
             brightness: Brightness.dark, primarySwatch: Colors.blue)
         .copyWith(
-      background: Colors.black,
+      surface: Colors.black,
     ),
   );
 }

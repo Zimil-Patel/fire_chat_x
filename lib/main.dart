@@ -1,3 +1,4 @@
+import 'package:fire_chat_x/services/noti_services.dart';
 import 'package:fire_chat_x/theme/theme_controller.dart';
 import 'package:fire_chat_x/theme/themes.dart';
 import 'package:fire_chat_x/utils/constants.dart';
@@ -20,6 +21,7 @@ AuthController authController = Get.put(AuthController());
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotiServices.notiServices.initNotification();
   await GetStorage.init();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

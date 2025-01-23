@@ -46,6 +46,7 @@ dependencies:
   flutter_svg: any
   cloud_firestore: ^5.6.1
   intl: ^0.20.1
+  flutter_local_notifications: ^18.0.1
 
 dev_dependencies:
   flutter_test:

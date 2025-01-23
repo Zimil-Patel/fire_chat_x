@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat_x/controller/home_controller.dart';
 import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/firestore_services.dart';
+import 'package:fire_chat_x/services/noti_services.dart';
 import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/chats/chats_screen.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +93,14 @@ class HomeScreen extends StatelessWidget {
             ),
       ),
       leading: profileCircleButton(),
+      actions: [
+        IconButton(
+          onPressed: () {
+            NotiServices.notiServices.showNotification();
+          },
+          icon: const Icon(Icons.notifications_active_outlined),
+        ),
+      ],
     );
   }
 }
