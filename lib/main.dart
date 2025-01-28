@@ -5,6 +5,7 @@ import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/auth/auth_screen.dart';
 import 'package:fire_chat_x/view/chats/chats_screen.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
+import 'package:fire_chat_x/view/post%20screen/post_screen.dart';
 import 'package:fire_chat_x/view/profile/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -44,13 +45,15 @@ class FireChatX extends StatelessWidget {
           GetPage(name: '/home', page: () => const HomeScreen()),
           GetPage(name: '/profile', page: () => const ProfileScreen()),
           GetPage(name: '/chats', page: () => const ChatsScreen()),
+          GetPage(name: '/post', page: () => const PostScreen()),
         ],
         debugShowCheckedModeBanner: false,
         theme: ThemeClass.lightTheme,
         darkTheme: ThemeClass.darkTheme,
         themeMode:
             themeController.isDark.value ? ThemeMode.dark : ThemeMode.light,
-        initialRoute: authController.isSignedIn.value ? '/home' : '/auth',
+        // initialRoute: authController.isSignedIn.value ? '/home' : '/auth',
+        initialRoute: '/post',
       ),
     );
   }
