@@ -2,26 +2,28 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat_x/model/user_model.dart';
+import 'package:fire_chat_x/services/api_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../model/chat_model.dart';
 import '../services/firestore_services.dart';
 
 class ChatController extends GetxController {
-
   UserModel? receiver;
   TextEditingController msgCtrl = TextEditingController();
   FocusNode focusNode = FocusNode();
   RxBool showSaveButton = false.obs;
   String selectedMsgId = "";
   ScrollController scrollController = ScrollController();
+  String imgUrl = "";
 
   setReceiver(UserModel receiver) {
     this.receiver = receiver;
   }
 
-  void scrollToEnd(){
+  void scrollToEnd() {
     log("Called scroll to end...");
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
@@ -50,7 +52,6 @@ class ChatController extends GetxController {
       focusNode.requestFocus();
       msgCtrl.clear();
       scrollToEnd();
-
     }
   }
 
@@ -60,20 +61,46 @@ class ChatController extends GetxController {
       showSaveButton.value = false;
       msgCtrl.clear();
       await FireStoreServices.fireStoreServices.updateChat(
-        message: message, sender: sender, receiver: receiver!.email, id: selectedMsgId,);
+        message: message,
+        sender: sender,
+        receiver: receiver!.email,
+        id: selectedMsgId,
+      );
     } else {
       showSaveButton.value = false;
     }
     scrollToEnd();
-    }
+  }
 
-    @override
-    void onClose() {
-      // Dispose of controllers and focus node
-      log("disposing");
-      msgCtrl.dispose();
-      focusNode.dispose();
-      scrollController.dispose();
-      super.onClose();
+  Future<void> pickImage(ImageSource source, String sender) async {
+    ImagePicker picker = ImagePicker();
+    XFile? imageFile = await picker.pickImage(source: source);
+    if (imageFile != null) {
+      final byteImage = await imageFile.readAsBytes();
+      final imgUrl = await ApiServices.apiServices.postImage(byteImage) ?? "";
+      if (imgUrl.isNotEmpty) {
+        ChatModel chat = ChatModel(
+          message: imgUrl,
+          isImage: true,
+          sender: sender,
+          receiver: receiver!.email!,
+          time: Timestamp.now(),
+        );
+
+        await FireStoreServices.fireStoreServices.sendChat(chat);
+      } else {
+        log("Url is empty!!!");
+      }
     }
   }
+
+  @override
+  void onClose() {
+    // Dispose of controllers and focus node
+    log("disposing");
+    msgCtrl.dispose();
+    focusNode.dispose();
+    scrollController.dispose();
+    super.onClose();
+  }
+}

@@ -4,13 +4,16 @@ class ChatModel {
   final String chatId;
   final String message, sender, receiver;
   final Timestamp time;
+  final bool isImage;
 
-  ChatModel(
-      {this.chatId = "null",
-      required this.message,
-      required this.sender,
-      required this.receiver,
-      required this.time});
+  ChatModel({
+    this.chatId = "null",
+    required this.message,
+    required this.sender,
+    required this.receiver,
+    required this.time,
+    this.isImage = false,
+  });
 
   factory ChatModel.fromFirebase(Map map, String chatId) => ChatModel(
         chatId: chatId,
@@ -18,5 +21,6 @@ class ChatModel {
         sender: map['sender'],
         receiver: map['receiver'],
         time: map['time'],
+        isImage: map['isImage'] ?? false,
       );
 }

@@ -11,7 +11,7 @@ class MsgField extends StatelessWidget {
     return Expanded(
       child: TextField(
         controller: chatController.msgCtrl,
-        style: const TextStyle(fontSize: 16),
+        style: const TextStyle(fontSize: 14),
         focusNode: chatController.focusNode,
         onTap: (){
           WidgetsBinding.instance.addPostFrameCallback((_) {

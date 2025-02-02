@@ -14,7 +14,7 @@ class ApiServices{
   final authorizationCode = "3a5bf3d7c48efc1408681a6b2aacd8ac01af1e2d";
 
 
-  Future<String> postImage(Uint8List image) async {
+  Future<String?> postImage(Uint8List image) async {
     log("called postImage...");
     final header = {'Authorization': 'Client-ID $clientId'};
     final body = base64Encode(image);
@@ -35,31 +35,8 @@ class ApiServices{
       log("Api call failed!!!");
     }
 
-    return "https://www.techsmith.com/blog/wp-content/uploads/2023/08/What-are-High-Resolution-Images.png";
+    return null;
   }
 
-
-  // get access token
-  Future<void> getAccessToken(String authCode) async {
-    final response = await http.post(
-      Uri.parse('https://api.imgur.com/oauth2/token'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: jsonEncode({
-        'client_id': clientId,
-        'client_secret': secretId,
-        'grant_type': authorizationCode,
-        'code': authCode,
-        'redirect_uri': 'http://localhost',
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      log("Access Token: ${data['access_token']}");
-      log("Refresh Token: ${data['refresh_token']}");
-    } else {
-      log("Error: ${response.body}");
-    }
-  }
 }
 

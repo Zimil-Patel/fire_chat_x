@@ -86,7 +86,8 @@ class FireStoreServices {
         "sender": chat.sender,
         "receiver": chat.receiver,
         "message": chat.message,
-        "time": chat.time
+        "time": chat.time,
+        "isImage": chat.isImage,
       });
     } catch (e) {
       log("Failed to send chat!!! : $e");

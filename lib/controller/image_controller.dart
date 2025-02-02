@@ -15,7 +15,7 @@ class ImageController extends GetxController{
     try{
       final Uint8List byteImage = await data!.readAsBytes();
       log("image pick success...");
-      image.value = await ApiServices.apiServices.postImage(byteImage);
+      image.value = await ApiServices.apiServices.postImage(byteImage) ?? "";
     } catch(e) {
       log("image pick failed!!!");
     }

@@ -52,8 +52,8 @@ class FireChatX extends StatelessWidget {
         darkTheme: ThemeClass.darkTheme,
         themeMode:
             themeController.isDark.value ? ThemeMode.dark : ThemeMode.light,
-        // initialRoute: authController.isSignedIn.value ? '/home' : '/auth',
-        initialRoute: '/post',
+        initialRoute: authController.isSignedIn.value ? '/home' : '/auth',
+        // initialRoute: '/post',
       ),
     );
   }

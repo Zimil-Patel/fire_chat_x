@@ -35,50 +35,82 @@ class MessageBox extends StatelessWidget {
       child: Align(
         alignment: alignment,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minWidth: 120
-          ),
+          constraints: const BoxConstraints(minWidth: 120),
           child: Container(
             key: containerKey,
             margin: margin,
-            padding: const EdgeInsets.symmetric(
-                vertical: defPadding / 2, horizontal: defPadding),
+            padding: EdgeInsets.symmetric(
+              vertical: defPadding / 2,
+              horizontal: chat.isImage ? defPadding / 2 : defPadding,
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: isSender ? Colors.blueAccent : Theme.of(context).cardColor,
             ),
-            child: Stack(
-              children: [
-                // Message Text
-                Padding(
-                  padding: EdgeInsets.only(bottom: height * 0.02),
-                  // Space for time
-                  child: Text(
-                    chat.message,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontSize: height * 0.018,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-                // Time Text
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Row(
+            child: chat.isImage
+                ? Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          chat.message,
+                          height: 200,
+                          width: 200,
+                          fit: BoxFit.cover,
+                        ),),
+
+                    SizedBox(height: 6,),
+
+                    Text(
+                      time,
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium!
+                          .copyWith(
+                        fontSize: height * 0.012,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    )
+                  ],
+                )
+                : Stack(
                     children: [
-                      Text(
-                        time,
-                        style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                              fontSize: height * 0.012,
-                              fontWeight: FontWeight.w900,
+                      // Message Text
+                      Padding(
+                        padding: EdgeInsets.only(bottom: height * 0.02),
+                        // Space for time
+                        child: Text(
+                          chat.message,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontSize: height * 0.018,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ),
+                      // Time Text
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Row(
+                          children: [
+                            Text(
+                              time,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(
+                                    fontSize: height * 0.012,
+                                    fontWeight: FontWeight.w900,
+                                  ),
                             ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
           ),
         ),
       ),

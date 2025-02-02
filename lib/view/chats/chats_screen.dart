@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fire_chat_x/controller/chat_controller.dart';
 import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:fire_chat_x/utils/constants.dart';
+import 'package:fire_chat_x/view/chats/components/add_button.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -74,6 +75,11 @@ class ChatsScreen extends StatelessWidget {
                       horizontal: defPadding, vertical: defPadding / 3),
                   child: Row(
                     children: [
+
+                      // ADD BUTTON
+                      AddButton(),
+
+
                       // TEXT FIELD
                       MsgField(),
 
@@ -148,6 +154,7 @@ class ChatsScreen extends StatelessWidget {
               ),
             ],
           ),
+
         ],
       ),
     );
