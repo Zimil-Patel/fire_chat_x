@@ -7,16 +7,13 @@ class NotiServices {
   static final NotiServices notiServices = NotiServices._();
 
   final _notificationsPlugin = FlutterLocalNotificationsPlugin();
-  bool _isInitialized = false;
 
-  bool get isInitialized => _isInitialized;
 
   // INITIALIZE NOTIFICATION
   Future<void> initNotification() async {
-    if (_isInitialized) return;
 
     if(Platform.isAndroid) {
-      _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
+      await _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
     }
 
     // SETTING FOR ANDROID

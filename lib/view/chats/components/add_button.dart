@@ -42,8 +42,8 @@ showMediaOptions(BuildContext context) {
             // GALLERY
             GestureDetector(
               onTap: () async {
-                await chatController.pickImage(ImageSource.gallery, homeController.currentUser!.email!);
                 Navigator.pop(context);
+                await chatController.pickImage(ImageSource.gallery, homeController.currentUser!.email!);
               },
               child: Column(
                 mainAxisSize: MainAxisSize.min,

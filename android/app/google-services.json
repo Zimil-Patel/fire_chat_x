@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "483366290749-jlqe9hl1o8qao0avpeevlpvpb3n9bd0c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fire_chat_x",
+            "certificate_hash": "a8ba8290d9e489ff73bed535fd19f16211604752"
+          }
+        },
+        {
           "client_id": "483366290749-u0221cqd94u9uuc8ie5srpp0jvrqsa3o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
