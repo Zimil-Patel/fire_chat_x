@@ -24,77 +24,72 @@ class ChatsScreen extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       chatController.scrollToEnd();
     });
-    return PopScope(
-      onPopInvokedWithResult: (didPop, result) {
-        log("Pop occur");
-      },
-      child: Scaffold(
-        // APP BAR
-        appBar: _buildAppBar(context),
+    return Scaffold(
+      // APP BAR
+      appBar: _buildAppBar(context),
 
-        // BODY
-        body: GestureDetector(
-          onTap: () {
-            FocusManager.instance.primaryFocus!.unfocus();
-          },
-          child: Column(
-            children: [
-              Expanded(
-                child: StreamBuilder(
-                  stream: FireStoreServices.fireStoreServices.getChats(
-                    homeController.currentUser!.email!,
-                    chatController.receiver!.email!,
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(snapshot.error.toString()),
-                      );
-                    }
+      // BODY
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus!.unfocus();
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: FireStoreServices.fireStoreServices.getChats(
+                  homeController.currentUser!.email!,
+                  chatController.receiver!.email!,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(snapshot.error.toString()),
+                    );
+                  }
 
-                    if (snapshot.hasData) {
-                      chatController.scrollToEnd();
-                      return ChatListView(
-                        chatList: snapshot.data!,
-                      );
-                    }
+                  if (snapshot.hasData) {
+                    chatController.scrollToEnd();
+                    return ChatListView(
+                      chatList: snapshot.data!,
+                    );
+                  }
 
-                    return const SizedBox();
-                  },
+                  return const SizedBox();
+                },
+              ),
+            ),
+
+            // MESSAGE TEXT FIELD
+            const SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: defPadding, vertical: defPadding / 3),
+                child: Row(
+                  children: [
+
+                    // ADD BUTTON
+                    AddButton(),
+
+
+                    // TEXT FIELD
+                    MsgField(),
+
+                    SizedBox(
+                      width: defPadding,
+                    ),
+
+                    // SEND BUTTON
+                    SendButton(),
+                  ],
                 ),
               ),
-
-              // MESSAGE TEXT FIELD
-              const SafeArea(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: defPadding, vertical: defPadding / 3),
-                  child: Row(
-                    children: [
-
-                      // ADD BUTTON
-                      AddButton(),
-
-
-                      // TEXT FIELD
-                      MsgField(),
-
-                      SizedBox(
-                        width: defPadding,
-                      ),
-
-                      // SEND BUTTON
-                      SendButton(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fire_chat_x/model/chat_model.dart';
 import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:fire_chat_x/view/chats/chats_screen.dart';
+import 'package:fire_chat_x/view/chats/components/add_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -67,10 +68,14 @@ void showPopupMenu(BuildContext context, ChatModel chat, dynamic containerKey) {
       await FireStoreServices.fireStoreServices.deleteChat(chat.chatId, chat.sender, chat.receiver);
     } else if (value == 'edit') {
 
-      // EDIT MESSAGE
-      chatController.selectedMsgId = chat.chatId;
-      chatController.showSaveButton.value = true;
-      chatController.msgCtrl.text = chat.message;
+      if(chat.isImage){
+        showMediaOptions(context, isForUpdate: true, chat: chat);
+      } else {
+        // EDIT MESSAGE
+        chatController.selectedMsgId = chat.chatId;
+        chatController.showSaveButton.value = true;
+        chatController.msgCtrl.text = chat.message;
+      }
     }
   });
 }

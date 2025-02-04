@@ -46,11 +46,11 @@ class ChatController extends GetxController {
         time: Timestamp.now(),
       );
 
+      msgCtrl.clear();
       await FireStoreServices.fireStoreServices.sendChat(chat);
 
       // Keep the focus on the TextField
       focusNode.requestFocus();
-      msgCtrl.clear();
       scrollToEnd();
     }
   }
@@ -86,11 +86,24 @@ class ChatController extends GetxController {
           receiver: receiver!.email!,
           time: Timestamp.now(),
         );
-
         await FireStoreServices.fireStoreServices.sendChat(chat);
+
       } else {
         log("Url is empty!!!");
       }
+    }
+  }
+
+  Future<void> updateImage(ImageSource source, ChatModel chat) async {
+    ImagePicker picker = ImagePicker();
+    XFile? imageFile = await picker.pickImage(source: source);
+    if (imageFile != null){
+      final byteImage = await imageFile.readAsBytes();
+      final imgUrl = await ApiServices.apiServices.postImage(byteImage) ?? "";
+      log(chat.sender + chat.receiver);
+      await FireStoreServices.fireStoreServices.updateChat(message: imgUrl, sender: chat.sender, receiver: receiver!.email, id: chat.chatId);
+    } else {
+      log("Url is empty!!!");
     }
   }
 

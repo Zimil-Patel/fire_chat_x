@@ -1,3 +1,4 @@
+import 'package:fire_chat_x/model/chat_model.dart';
 import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/chats/chats_screen.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
@@ -29,7 +30,7 @@ class AddButton extends StatelessWidget {
   }
 }
 
-showMediaOptions(BuildContext context) {
+showMediaOptions(BuildContext context, {bool isForUpdate = false, ChatModel? chat}) {
   return showModalBottomSheet(
     context: context,
     builder: (context) {
@@ -43,7 +44,11 @@ showMediaOptions(BuildContext context) {
             GestureDetector(
               onTap: () async {
                 Navigator.pop(context);
-                await chatController.pickImage(ImageSource.gallery, homeController.currentUser!.email!);
+                if(isForUpdate){
+                  await chatController.updateImage(ImageSource.gallery, chat!);
+                } else {
+                  await chatController.pickImage(ImageSource.gallery, homeController.currentUser!.email!);
+                }
               },
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -70,8 +75,12 @@ showMediaOptions(BuildContext context) {
             // CAMERA
             GestureDetector(
               onTap: () async {
-                await chatController.pickImage(ImageSource.camera, homeController.currentUser!.email!);
                 Navigator.pop(context);
+                if(isForUpdate){
+                  await chatController.updateImage(ImageSource.camera, chat!);
+                } else {
+                  await chatController.pickImage(ImageSource.camera, homeController.currentUser!.email!);
+                }
               },
               child: Column(
                 mainAxisSize: MainAxisSize.min,

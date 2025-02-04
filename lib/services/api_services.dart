@@ -15,10 +15,8 @@ class ApiServices{
 
 
   Future<String?> postImage(Uint8List image) async {
-    log("called postImage...");
     final header = {'Authorization': 'Client-ID $clientId'};
     final body = base64Encode(image);
-    log("header body set...");
     try{
       log("calling request...");
       final Response response = await http.post(Uri.parse(api) ,headers: header, body: body);

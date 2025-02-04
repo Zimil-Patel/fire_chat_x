@@ -6,6 +6,7 @@ import 'package:fire_chat_x/view/chats/components/show_menu_options.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MessageBox extends StatelessWidget {
   MessageBox({
@@ -49,32 +50,32 @@ class MessageBox extends StatelessWidget {
             ),
             child: chat.isImage
                 ? Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          chat.message,
-                          height: 200,
-                          width: 200,
-                          fit: BoxFit.cover,
-                        ),),
-
-                    SizedBox(height: 6,),
-
-                    Text(
-                      time,
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(
-                        fontSize: height * 0.012,
-                        fontWeight: FontWeight.w900,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: CachedNetworkImage(
+                            imageUrl: chat.message,
+                            height: 200,
+                            width: 200,
+                            fit: BoxFit.cover,
+                            progressIndicatorBuilder: (context, url, progress) => const CircularProgressIndicator(),
+                            useOldImageOnUrlChange: true,
+                          )),
+                      const SizedBox(
+                        height: 6,
                       ),
-                    )
-                  ],
-                )
+                      Text(
+                        time,
+                        style:
+                            Theme.of(context).textTheme.displayMedium!.copyWith(
+                                  fontSize: height * 0.012,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                      )
+                    ],
+                  )
                 : Stack(
                     children: [
                       // Message Text
