@@ -4,13 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat_x/model/chat_model.dart';
 import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/auth_services.dart';
+import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FireStoreServices {
   FireStoreServices._instance();
 
   static final FireStoreServices fireStoreServices =
-      FireStoreServices._instance();
+  FireStoreServices._instance();
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
@@ -22,6 +23,7 @@ class FireStoreServices {
         "phone": user.phoneNumber,
         "displayName": user.displayName,
         "photoURL": user.photoURL,
+        "isActive": true,
       });
 
       log("Added successfully...");
@@ -32,10 +34,10 @@ class FireStoreServices {
 
   // GET CURRENT USER DETAIL FROM FIRE STORE
   Future<UserModel?> getCurrentUserInfo() async {
-    User? user = AuthServices.user!;
+    User? user = AuthServices.authServices.getCurrentUser();
     try {
       DocumentSnapshot snapshot =
-          await _fireStore.collection('users').doc(user.email).get();
+      await _fireStore.collection('users').doc(user!.email).get();
       final data = snapshot.data() as Map<String, dynamic>;
       UserModel result = UserModel.fromFireStore(data);
       return result;
@@ -48,7 +50,7 @@ class FireStoreServices {
 
   // GET ALL USERS LIST
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?>
-      getFireStoreUsersList() async {
+  getFireStoreUsersList() async {
     try {
       final userList = await _fireStore
           .collection('users')
@@ -74,7 +76,6 @@ class FireStoreServices {
     return chatReference;
   }
 
-
   // SET ONLINE OFFLINE STATUS
 
   // SEND MESSAGE / ADD MESSAGE TO FIREBASE
@@ -88,6 +89,7 @@ class FireStoreServices {
         "message": chat.message,
         "time": chat.time,
         "isImage": chat.isImage,
+        "isSeen": chat.isSeen
       });
     } catch (e) {
       log("Failed to send chat!!! : $e");
@@ -97,15 +99,28 @@ class FireStoreServices {
   // GET CHATS
   Stream<List<ChatModel>> getChats(String sender, String receiver) {
     DocumentReference reference = getDocReference(sender, receiver);
-
     // Return a stream of ChatModel lists
     return reference
         .collection('messages')
         .orderBy('time', descending: false)
         .snapshots()
-        .map((querySnapshot) => querySnapshot.docs.map((snapshot) {
-              return ChatModel.fromFirebase(snapshot.data(), snapshot.id);
-            }).toList());
+        .map((querySnapshot) =>
+        querySnapshot.docs.map((snapshot) {
+          return ChatModel.fromFirebase(snapshot.data(), snapshot.id);
+        }).toList());
+  }
+
+  // MARK MESSAGE AS SEEN
+  Future<void> markMessageAsSeen(String sender, receiver) async {
+    // log("Making message as seen");
+    final reference = getDocReference(sender, receiver);
+
+    final snapshot = await reference.collection('messages').where('receiver', isEqualTo: sender).where(
+        'isSeen', isEqualTo: false).get();
+
+    for(var doc in snapshot.docs){
+      await doc.reference.update({'isSeen': true});
+    }
   }
 
   // DELETE CHAT
@@ -122,11 +137,10 @@ class FireStoreServices {
   }
 
   // UPDATE CHAT
-  Future<void> updateChat(
-      {required String message,
-      required sender,
-      required receiver,
-      required id}) async {
+  Future<void> updateChat({required String message,
+    required sender,
+    required receiver,
+    required id}) async {
     DocumentReference reference = getDocReference(sender, receiver);
     // DELETE CHAT
     try {
@@ -138,5 +152,19 @@ class FireStoreServices {
     } catch (e) {
       log("Chat update failed");
     }
+  }
+
+  // SET IS ACTIVE
+  Future<void> setIsActiveStatus(bool status, String userEmail) async {
+    await _fireStore
+        .collection('users')
+        .doc(userEmail)
+        .update({'isActive': status});
+  }
+
+  // GET IS ACTIVE STATUS
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getIsActiveStatus(
+      String userEmail) {
+    return _fireStore.collection('users').doc(userEmail).snapshots();
   }
 }

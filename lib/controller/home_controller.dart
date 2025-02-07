@@ -11,13 +11,14 @@ class HomeController extends GetxController{
 
   // GET CURRENT USER
   Future<UserModel?> setCurrentUser() async {
+    // log("------ setting current user");
     currentUser = await FireStoreServices.fireStoreServices.getCurrentUserInfo();
     return currentUser;
   }
 
   @override
   Future<void> onInit() async {
-    log("called init");
+    // log("called init");
     await setCurrentUser();
     await FireStoreServices.fireStoreServices.getFireStoreUsersList();
     super.onInit();

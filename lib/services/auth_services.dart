@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fire_chat_x/main.dart';
 import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,7 +39,9 @@ class AuthServices {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       user = userCredential.user;
+      await FireStoreServices.fireStoreServices.setIsActiveStatus(true, user!.email!);
       log("Successfully singed in... ${userCredential.user!.email}");
+
       return true;
     } catch (e) {
       log("Sign in failed !!! : $e");
@@ -49,9 +53,11 @@ class AuthServices {
   Future<void> singOutUser() async {
     try {
       if (getCurrentUser() != null) {
+        await FireStoreServices.fireStoreServices.setIsActiveStatus(false, AuthServices.authServices.getCurrentUser()!.email!);
         await _firebaseAuth.signOut();
         await GoogleSignIn().signOut();
         user = null;
+        authController.setSignInStatusInStorage(false);
         log("Signed out...");
       } else {
         log("Current user is null");
@@ -89,13 +95,25 @@ class AuthServices {
         if (getCurrentUser() != null) {
           user = getCurrentUser();
           log("Logged in as ${getCurrentUser()!.email!}");
-          UserModel details = UserModel(
-            email: user!.email,
-            displayName: user!.displayName,
-            phoneNumber: user!.phoneNumber,
-            photoURL: user!.photoURL,
-          );
-          FireStoreServices.fireStoreServices.addUser(details);
+
+          final userDoc = FirebaseFirestore.instance.collection('users').doc(user!.email);
+          DocumentSnapshot snapshot = await userDoc.get();
+
+          if(snapshot.exists){
+            // update status only is already user exists
+            await FireStoreServices.fireStoreServices.setIsActiveStatus(true, user!.email!);
+          } else {
+            // add new user to users collection
+            UserModel details = UserModel(
+              email: user!.email,
+              displayName: user!.displayName,
+              phoneNumber: user!.phoneNumber,
+              photoURL: user!.photoURL,
+            );
+            await FireStoreServices.fireStoreServices.addUser(details);
+          }
+
+
           return true;
         }
       } catch (e) {

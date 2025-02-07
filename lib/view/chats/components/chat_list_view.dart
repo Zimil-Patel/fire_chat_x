@@ -16,7 +16,6 @@ class ChatListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     log("Chat list rebuild...");
 
     return Column(
@@ -24,11 +23,20 @@ class ChatListView extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             controller: chatController.scrollController,
-            padding: const EdgeInsets.symmetric(horizontal: defPadding / 2, vertical: defPadding),
+            padding: const EdgeInsets.symmetric(
+                horizontal: defPadding / 2, vertical: defPadding),
             reverse: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: chatList.map((chat) => MessageBox(chat: chat)).toList(),
+              children: [
+                ...List.generate(
+                  chatList.length,
+                  (index) {
+
+                    return MessageBox(chat: chatList[index], isLastMsg: index == chatList.length-1,);
+                  },
+                ),
+              ],
             ),
           ),
         ),

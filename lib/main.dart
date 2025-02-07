@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fire_chat_x/services/auth_services.dart';
 import 'package:fire_chat_x/services/messaging_services.dart';
 import 'package:fire_chat_x/services/noti_services.dart';
 import 'package:fire_chat_x/theme/theme_controller.dart';
@@ -17,6 +18,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'controller/auth_controller.dart';
+import 'controller/life_cycle_controller.dart';
 import 'firebase_options.dart';
 
 ThemeController themeController = Get.put(ThemeController());
@@ -25,6 +27,7 @@ AuthController authController = Get.put(AuthController());
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  Get.put(AppLifecycleController());
   if(Platform.isAndroid){
     await MessagingService.messagingService.requestPermission();
     await MessagingService.messagingService.getDeviceToken();
@@ -60,7 +63,7 @@ class FireChatX extends StatelessWidget {
         darkTheme: ThemeClass.darkTheme,
         themeMode:
             themeController.isDark.value ? ThemeMode.dark : ThemeMode.light,
-        initialRoute: authController.isSignedIn.value ? '/home' : '/auth',
+        initialRoute: AuthServices.authServices.getCurrentUser() != null ? '/home' : '/auth',
         // initialRoute: '/post',
       ),
     );

@@ -1,5 +1,5 @@
 class UserModel {
-  String? displayName, email, phoneNumber, photoURL;
+  String? displayName, email, phoneNumber, photoURL, userId;
 
   UserModel({this.displayName, this.email, this.phoneNumber, this.photoURL});
 

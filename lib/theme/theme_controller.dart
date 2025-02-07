@@ -24,6 +24,6 @@ class ThemeController extends GetxController {
   Future<void> getTheme() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     isDark.value = pref.getBool('isDark') ?? true;
-    log("Got theme pref : $isDark");
+    // log("Got theme pref : $isDark");
   }
 }

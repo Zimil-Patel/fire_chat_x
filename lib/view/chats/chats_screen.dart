@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat_x/controller/chat_controller.dart';
 import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:fire_chat_x/utils/constants.dart';
@@ -137,17 +138,43 @@ class ChatsScreen extends StatelessWidget {
           ),
 
           // ONLINE STATUS
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Online",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: Colors.green),
-              ),
-            ],
+          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: FireStoreServices.fireStoreServices.getIsActiveStatus(chatController.receiver!.email!),
+            builder: (context, snapshot) {
+
+              if(snapshot.hasError){
+                return Text(snapshot.error.toString());
+              } else if (snapshot.connectionState == ConnectionState.waiting){
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Offline",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: Colors.grey),
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasData){
+                final status = snapshot.data!.data()!['isActive'];
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      status ? "Online" : "Offline",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: status ? Colors.green : Colors.grey),
+                    ),
+                  ],
+                );
+              }
+
+              return const SizedBox();
+            }
           ),
 
         ],
