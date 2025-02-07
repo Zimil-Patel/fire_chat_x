@@ -11,7 +11,7 @@ class FireStoreServices {
   FireStoreServices._instance();
 
   static final FireStoreServices fireStoreServices =
-  FireStoreServices._instance();
+      FireStoreServices._instance();
 
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
@@ -37,7 +37,7 @@ class FireStoreServices {
     User? user = AuthServices.authServices.getCurrentUser();
     try {
       DocumentSnapshot snapshot =
-      await _fireStore.collection('users').doc(user!.email).get();
+          await _fireStore.collection('users').doc(user!.email).get();
       final data = snapshot.data() as Map<String, dynamic>;
       UserModel result = UserModel.fromFireStore(data);
       return result;
@@ -50,7 +50,7 @@ class FireStoreServices {
 
   // GET ALL USERS LIST
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?>
-  getFireStoreUsersList() async {
+      getFireStoreUsersList() async {
     try {
       final userList = await _fireStore
           .collection('users')
@@ -104,10 +104,9 @@ class FireStoreServices {
         .collection('messages')
         .orderBy('time', descending: false)
         .snapshots()
-        .map((querySnapshot) =>
-        querySnapshot.docs.map((snapshot) {
-          return ChatModel.fromFirebase(snapshot.data(), snapshot.id);
-        }).toList());
+        .map((querySnapshot) => querySnapshot.docs.map((snapshot) {
+              return ChatModel.fromFirebase(snapshot.data(), snapshot.id);
+            }).toList());
   }
 
   // MARK MESSAGE AS SEEN
@@ -115,10 +114,13 @@ class FireStoreServices {
     // log("Making message as seen");
     final reference = getDocReference(sender, receiver);
 
-    final snapshot = await reference.collection('messages').where('receiver', isEqualTo: sender).where(
-        'isSeen', isEqualTo: false).get();
+    final snapshot = await reference
+        .collection('messages')
+        .where('receiver', isEqualTo: sender)
+        .where('isSeen', isEqualTo: false)
+        .get();
 
-    for(var doc in snapshot.docs){
+    for (var doc in snapshot.docs) {
       await doc.reference.update({'isSeen': true});
     }
   }
@@ -137,10 +139,11 @@ class FireStoreServices {
   }
 
   // UPDATE CHAT
-  Future<void> updateChat({required String message,
-    required sender,
-    required receiver,
-    required id}) async {
+  Future<void> updateChat(
+      {required String message,
+      required sender,
+      required receiver,
+      required id}) async {
     DocumentReference reference = getDocReference(sender, receiver);
     // DELETE CHAT
     try {
@@ -167,4 +170,15 @@ class FireStoreServices {
       String userEmail) {
     return _fireStore.collection('users').doc(userEmail).snapshots();
   }
+
+  // UPDATE PROFILE PICTURE
+  Future<void> updateUserProfilePicture(String url, userEmail) async {
+    await _fireStore.collection('users').doc(userEmail).update({"photoURL": url});
+  }
+
+  // UPDATE DISPLAY NAME
+  Future<void> updateUserDisplayName(String name, userEmail) async {
+    await _fireStore.collection('users').doc(userEmail).update({"displayName": name});
+  }
+
 }
