@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fire_chat_x/controller/home_controller.dart';
 import 'package:fire_chat_x/model/user_model.dart';
 import 'package:fire_chat_x/services/auth_services.dart';

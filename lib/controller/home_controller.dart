@@ -5,7 +5,6 @@ import 'package:fire_chat_x/services/api_services.dart';
 import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../model/user_model.dart';
