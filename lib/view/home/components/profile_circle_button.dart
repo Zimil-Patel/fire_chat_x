@@ -43,7 +43,10 @@ profileCircleButton() {
                         ),
                 );
               } else {
-                return const SizedBox();
+                return const CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, color: Colors.white),
+                );
               }
             },
           ),
