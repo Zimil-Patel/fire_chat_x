@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fire_chat_x/controller/home_controller.dart';
 import 'package:fire_chat_x/utils/constants.dart';
-import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../../main.dart';
 
 class ProfilePhotoSection extends StatelessWidget {
   const ProfilePhotoSection({

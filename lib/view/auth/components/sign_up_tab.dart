@@ -1,11 +1,13 @@
 import 'package:fire_chat_x/view/auth/components/text_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../main.dart';
 import '../../../services/auth_services.dart';
 import '../../../utils/constants.dart';
 import 'google_sign_in_btn.dart';
+import 'lottie_loading_animation.dart';
 
 class SignUpTab extends StatelessWidget {
   const SignUpTab({
@@ -51,34 +53,52 @@ class SignUpTab extends StatelessWidget {
             const SizedBox(height: 30.0),
 
             // Sign-Up Button
-            ElevatedButton(
-              onPressed: () async {
-                var email = authController.emailCtrl.text;
-                var password = authController.passCtrl.text;
-                final result = await AuthServices.authServices.createUserWithEmailAndPassword(email: email, password: password);
-                if(result){
-                  Get.snackbar('Sign up Success', 'You can sign in now.',);
-                  await authController.setSignInStatusInStorage(result);
-                } else {
-                  Get.snackbar('Sign up Failed!!!', 'Please try again',);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: const Color(0xFF3977F0),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+            Obx(
+              () => authController.isLoading.value ? const LottieLoadingAnimation() : ElevatedButton(
+                onPressed: () async {
+                  authController.isLoading.value = true;
+                  var email = authController.emailCtrl.text;
+                  var password = authController.passCtrl.text;
+                  final result = await AuthServices.authServices.createUserWithEmailAndPassword(email: email, password: password);
+                  if(result){
+                    toastification.show(
+                      style: ToastificationStyle.minimal,
+                      title: const Text('Sign up success'),
+                      description: const Text('Now you can sign in'),
+                      autoCloseDuration: const Duration(seconds: 2),
+                      type: ToastificationType.success,
+                    );
+                    await authController.setSignInStatusInStorage(result);
+                    authController.emailCtrl.clear();
+                    authController.passCtrl.clear();
+                  } else {
+                    toastification.show(
+                      style: ToastificationStyle.minimal,
+                      title: const Text('Sign up failed!!'),
+                      description: const Text('Please try again.'),
+                      autoCloseDuration: const Duration(seconds: 2),
+                      type: ToastificationType.error,
+                    );
+                  }
+                  authController.isLoading.value = false;
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: const Color(0xFF3977F0),
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0,
+                    vertical: 15.0,
+                  ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 15.0,
-                ),
-              ),
-              child: const Text(
-                'Sign Up',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+                child: const Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -113,7 +133,6 @@ class SignUpTab extends StatelessWidget {
               ],
             ),
 
-
             // Continue with Google Button
             googleSignInBtn(context),
 
@@ -123,5 +142,4 @@ class SignUpTab extends StatelessWidget {
       ),
     );
   }
-
 }

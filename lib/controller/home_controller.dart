@@ -1,12 +1,12 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:fire_chat_x/services/api_services.dart';
-import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:toastification/toastification.dart';
 
+import '../main.dart';
 import '../model/user_model.dart';
 import '../services/firestore_services.dart';
 
@@ -20,9 +20,8 @@ class HomeController extends GetxController {
     // log("------ setting current user");
     currentUser =
         await FireStoreServices.fireStoreServices.getCurrentUserInfo();
-    homeController.txtName.text = currentUser!.displayName ?? "";
+    if(currentUser != null) homeController.txtName.text = currentUser!.displayName ?? "";
     update();
-    log("- updating -----------------");
     return currentUser;
   }
 
@@ -38,6 +37,13 @@ class HomeController extends GetxController {
         await FireStoreServices.fireStoreServices
             .updateUserProfilePicture(url, currentUser!.email);
         await setCurrentUser();
+        toastification.show(
+          type: ToastificationType.success,
+          style: ToastificationStyle.minimal,
+          autoCloseDuration: const Duration(seconds: 2),
+          title: const Text('Success'),
+          description: const Text('Profile photo updated.'),
+        );
       }
     }
   }
@@ -49,6 +55,13 @@ class HomeController extends GetxController {
           .updateUserDisplayName(txtName.text, currentUser!.email);
 
       await setCurrentUser();
+      toastification.show(
+        type: ToastificationType.success,
+        style: ToastificationStyle.minimal,
+        autoCloseDuration: const Duration(seconds: 2),
+        title: const Text('Success'),
+        description: const Text('Display name updated.'),
+      );
     }
     if (focusNode.hasFocus) focusNode.unfocus();
   }
@@ -56,8 +69,7 @@ class HomeController extends GetxController {
   @override
   Future<void> onInit() async {
     // log("called init");
-    await setCurrentUser();
-    await FireStoreServices.fireStoreServices.getFireStoreUsersList();
+    // await setCurrentUser();
     super.onInit();
   }
 

@@ -16,7 +16,6 @@ void showPopupMenu(BuildContext context, ChatModel chat, dynamic containerKey) {
 
   log("----------- ${chat.chatId} ----------");
 
-
   showMenu(
     context: context,
     color: Colors.black,
@@ -64,12 +63,32 @@ void showPopupMenu(BuildContext context, ChatModel chat, dynamic containerKey) {
         ),
       );
     } else if (value == 'delete') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          duration: Duration(seconds: 1),
+          content: Text(
+            'Message Deleted',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.black,
+        ),
+      );
       // DELETE MESSAGE
-      await FireStoreServices.fireStoreServices.deleteChat(chat.chatId, chat.sender, chat.receiver);
+      await FireStoreServices.fireStoreServices
+          .deleteChat(chat.chatId, chat.sender, chat.receiver);
     } else if (value == 'edit') {
-
-      if(chat.isImage){
+      if (chat.isImage) {
         showMediaOptions(context, isForUpdate: true, chat: chat);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            duration: Duration(seconds: 1),
+            content: Text(
+              'Image Edited',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.black,
+          ),
+        );
       } else {
         // EDIT MESSAGE
         chatController.selectedMsgId = chat.chatId;

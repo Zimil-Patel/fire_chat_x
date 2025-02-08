@@ -3,11 +3,11 @@ import 'package:fire_chat_x/model/chat_model.dart';
 import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/chats/components/show_menu_option_for_receiver_message.dart';
 import 'package:fire_chat_x/view/chats/components/show_menu_options.dart';
-import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../../main.dart';
 import '../../../services/firestore_services.dart';
 import '../chats_screen.dart';
 

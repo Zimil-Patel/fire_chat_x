@@ -1,6 +1,8 @@
+import 'package:fire_chat_x/view/auth/components/lottie_loading_animation.dart';
 import 'package:fire_chat_x/view/auth/components/text_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../main.dart';
 import '../../../services/auth_services.dart';
@@ -69,36 +71,47 @@ class SignInTab extends StatelessWidget {
             const SizedBox(height: defPadding / 2),
 
             // Sign-In Button
-            ElevatedButton(
-              onPressed: () async {
-                var email = authController.emailCtrl.text;
-                var password = authController.passCtrl.text;
-                final result = await AuthServices.authServices.signInWithEmailAndPassword(email: email, password: password);
-                if(result){
-                  Get.offAndToNamed('/home');
-                  await authController.setSignInStatusInStorage(result);
-                  authController.clearCtrl();
-                } else {
-                  Get.snackbar('Login Failed!!!', 'Invalid email or password.',);
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: const Color(0xFF3977F0),
-                backgroundColor: Colors.white,
-                // Text color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+            Obx(
+              () => authController.isLoading.value ? const LottieLoadingAnimation() : ElevatedButton(
+                onPressed: () async {
+                  authController.isLoading.value = true;
+                  var email = authController.emailCtrl.text;
+                  var password = authController.passCtrl.text;
+                  final result = await AuthServices.authServices.signInWithEmailAndPassword(email: email, password: password);
+                  if(result){
+                    await authController.setSignInStatusInStorage(result);
+                    authController.clearCtrl();
+                    authController.isLoading.value = false;
+                    Get.offAndToNamed('/home');
+                  } else {
+                    authController.isLoading.value = false;
+                    toastification.show(
+                      style: ToastificationStyle.minimal,
+                      title: const Text('Login failed!!!'),
+                      description: const Text('Invalid email or password.'),
+                      autoCloseDuration: const Duration(seconds: 2),
+                      type: ToastificationType.error,
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: const Color(0xFF3977F0),
+                  backgroundColor: Colors.white,
+                  // Text color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0,
+                    vertical: 15.0,
+                  ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40.0,
-                  vertical: 15.0,
-                ),
-              ),
-              child: const Text(
-                'Sign In',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
+                child: const Text(
+                  'Sign In',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

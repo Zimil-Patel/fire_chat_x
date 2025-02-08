@@ -5,10 +5,10 @@ import 'package:fire_chat_x/controller/chat_controller.dart';
 import 'package:fire_chat_x/services/firestore_services.dart';
 import 'package:fire_chat_x/utils/constants.dart';
 import 'package:fire_chat_x/view/chats/components/add_button.dart';
-import 'package:fire_chat_x/view/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../main.dart';
 import 'components/chat_list_view.dart';
 import 'components/msg_field.dart';
 import 'components/send_button.dart';

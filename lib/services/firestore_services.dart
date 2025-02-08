@@ -48,20 +48,19 @@ class FireStoreServices {
   }
 
   // GET ALL USERS LIST
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>?>
-      getFireStoreUsersList() async {
+  Stream<List<UserModel>> getFireStoreUsersList() {
     try {
-      final userList = await _fireStore
-          .collection('users')
-          .get()
-          .then((value) => value.docs);
-
-      return userList;
+      return _fireStore.collection('users').snapshots().map(
+        (querySnapshot) {
+          return querySnapshot.docs.map((snapshot) {
+            return UserModel.fromFireStore(snapshot.data());
+          }).toList();
+        },
+      );
     } catch (e) {
       log("Failed to get user info: $e");
     }
-
-    return null;
+    return const Stream.empty();
   }
 
   // CHAT SERVICES
@@ -172,12 +171,30 @@ class FireStoreServices {
 
   // UPDATE PROFILE PICTURE
   Future<void> updateUserProfilePicture(String url, userEmail) async {
-    await _fireStore.collection('users').doc(userEmail).update({"photoURL": url});
+    await _fireStore
+        .collection('users')
+        .doc(userEmail)
+        .update({"photoURL": url});
   }
 
   // UPDATE DISPLAY NAME
   Future<void> updateUserDisplayName(String name, userEmail) async {
-    await _fireStore.collection('users').doc(userEmail).update({"displayName": name});
+    await _fireStore
+        .collection('users')
+        .doc(userEmail)
+        .update({"displayName": name});
   }
 
+  // GET PROFILE PHOTO STREAM
+  Stream<String> getProfilePhoto(String? email) {
+    if (email != null && email.isNotEmpty) {
+      return _fireStore
+          .collection('users')
+          .doc(email)
+          .snapshots()
+          .map((snapshot) => snapshot.data()!['photoURL']);
+    } else {
+      return const Stream.empty();
+    }
+  }
 }

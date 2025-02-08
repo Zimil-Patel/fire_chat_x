@@ -39,6 +39,7 @@ class AuthServices {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       user = userCredential.user;
+      await homeController.setCurrentUser();
       await FireStoreServices.fireStoreServices.setIsActiveStatus(true, user!.email!);
       log("Successfully singed in... ${userCredential.user!.email}");
 
@@ -94,13 +95,15 @@ class AuthServices {
         await _firebaseAuth.signInWithCredential(credential);
         if (getCurrentUser() != null) {
           user = getCurrentUser();
+          await homeController.setCurrentUser();
+
           log("Logged in as ${getCurrentUser()!.email!}");
 
           final userDoc = FirebaseFirestore.instance.collection('users').doc(user!.email);
           DocumentSnapshot snapshot = await userDoc.get();
 
           if(snapshot.exists){
-            // update status only is already user exists
+            // update status only if already user exists
             await FireStoreServices.fireStoreServices.setIsActiveStatus(true, user!.email!);
           } else {
             // add new user to users collection

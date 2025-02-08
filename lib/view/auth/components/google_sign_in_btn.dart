@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../main.dart';
 import '../../../services/auth_services.dart';
@@ -10,12 +11,21 @@ import '../../../utils/constants.dart';
 CupertinoButton googleSignInBtn(BuildContext context) {
   return CupertinoButton(
     onPressed: () async {
+      authController.isLoading.value = true;
       final result = await AuthServices.authServices.signInWithGoogle();
       if(result){
         await authController.setSignInStatusInStorage(result);
+        authController.isLoading.value = false;
         Get.offAndToNamed('/home');
       } else {
-        Get.snackbar('Sign up Failed!!!', 'Please try again',);
+        toastification.show(
+          style: ToastificationStyle.minimal,
+          title: const Text('Sign in failed!!'),
+          description: const Text('Please try again.'),
+          autoCloseDuration: const Duration(seconds: 2),
+          type: ToastificationType.error,
+        );
+        authController.isLoading.value = false;
       }
     },
     padding: EdgeInsets.zero,

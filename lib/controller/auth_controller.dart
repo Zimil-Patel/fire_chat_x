@@ -14,6 +14,7 @@ class AuthController extends GetxController {
   var segmentValue = 'email'.obs;
   var hidePass = true.obs;
   var isSignedIn = false.obs;
+  var isLoading = false.obs;
   RxList<CountryCode> countryCodeList = <CountryCode>[].obs;
 
   // CLEAR ALL CONTROLLERS
